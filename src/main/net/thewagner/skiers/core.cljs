@@ -1,5 +1,6 @@
 ; Example from https://github.com/mbrooker/simulator_example/blob/main/ski_sim.py
-(ns net.thewagner.skiers.core)
+(ns net.thewagner.skiers.core
+  (:require [net.thewagner.des.core :as des]))
 
 (defn dec0 [x]
   (max (dec x) 0))
@@ -51,7 +52,7 @@
       (update :events into (replicate riders {:event :skier/leaves-lift :t (+ t ride-time)}))
       (update :events conj {:event :lift/leaves :t (+ t chair-period)}))))
 
-(def initial-state
+(def default-initial-state
   {; simulation parameters
    :sim/end-time 50
    :lift/ride-time 10
@@ -68,8 +69,21 @@
    ; future event queue
    :events [{:event :lift/leaves :t 0}]})
 
+(defn simulate
+  ([]
+   (simulate default-initial-state))
+
+  ([initial-state]
+   (loop [res []
+          state (assoc initial-state :t 0)]
+     (let [next-state (des/step state handle-event)
+           t (:t next-state)]
+       (if (>= t (:sim/end-time state))
+         res
+         (recur (conj res next-state) next-state))))))
+
 (comment
-  (handle-event initial-state {:event :skier/joins-queue :t 0})
-  (handle-event initial-state {:event :lift/leaves :t 0})
-  (handle-event initial-state {:event :skier/leaves-lift :t 0})
+  (handle-event default-initial-state {:event :skier/joins-queue :t 0})
+  (handle-event default-initial-state {:event :lift/leaves :t 0})
+  (handle-event default-initial-state {:event :skier/leaves-lift :t 0})
   (simulate))

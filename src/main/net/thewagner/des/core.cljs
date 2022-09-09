@@ -25,12 +25,3 @@
         (handle-event event)
         (assoc :t (event :t)))
       state)))
-
-(defn simulate [initial-state handle-event]
-  (loop [res []
-         state (assoc initial-state :t 0)]
-    (let [next-state (step state handle-event)
-          t (:t next-state)]
-      (if (>= t (:sim/end-time state))
-        res
-        (recur (conj res next-state) next-state)))))
