@@ -21,7 +21,7 @@
     (update :skiers/skiing dec0)
     (update :skiers/waiting inc)))
 
-(defmethod handle-event :skier/leaves-lift [{:keys [sim/skiing-time] :as state} {t :t}]
+(defmethod handle-event :skier/leaves-lift [{:keys [skiers/skiing-time] :as state} {t :t}]
   (-> state
     (update :skiers/riding-lift dec0)
     (update :skiers/skiing inc)
@@ -39,10 +39,10 @@
 (def initial-state
   {; simulation parameters
    :sim/end-time 50
-   :sim/skiing-time 20
    :lift/ride-time 10
    :lift/chair-width 4
    :lift/chair-period 4
+   :skiers/skiing-time 20
 
    ; stats
    :skiers/waiting 2
