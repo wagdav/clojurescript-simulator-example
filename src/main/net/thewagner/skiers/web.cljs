@@ -5,7 +5,7 @@
             [reagent.dom :as rdom]
             [goog.string :as gstring]
             [goog.string.format]
-            [vega-embed]))
+            [react-vega]))
 
 (goog-define ^string revision "main")
 
@@ -22,9 +22,12 @@
                    {:a "H"  :b 87}
                    {:a "I"  :b 52}]}
    :mark "bar"
-   :encoding {:x {:field "a" :type "ordinal"}
-              :y {:field "b" :type "quantitative"}}
-   :width "container"})
+   :encoding {:x {:field "a"
+                  :type "ordinal"
+                  :title "a-value"}
+              :y {:field "b"
+                  :type "quantitative"
+                  :title "b-value"}}})
 
 (defn main []
   [:<>
@@ -33,9 +36,8 @@
       [:div.columns
         [:div.column
           "Graph on the right"]
-        [:div#vis.columns.column]]]])
-
-(vega-embed/embed "#vis" (clj->js vlSpec))
+        [:div.column
+          [:> react-vega/VegaLite {:spec vlSpec}]]]]])
 
 (defn mount []
   (rdom/render [main] (gdom/getElement "app")))
