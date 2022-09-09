@@ -10,6 +10,19 @@
     (<= a x b) x
     (< b x)    b))
 
+;https://stackoverflow.com/questions/25582882/javascript-math-random-normal-distribution-gaussian-bell-curve
+(defn standard_normal_bm []
+  (let [u (- 1 (js/Math.random))
+        v (js/Math.random)]
+    (*
+      (js/Math.sqrt (* -2.0 (js/Math.log u)))
+      (js/Math.cos (* 2.0 js/Math.PI v)))))
+
+(defn normalvariate [mu sigma]
+  (+
+    (* sigma (standard_normal_bm))
+    mu))
+
 (defmulti handle-event (fn [state event] (:event event)))
 
 (defmethod handle-event :default [state event] state)
@@ -25,9 +38,13 @@
     (update :skiers/skiing inc)
     (update :events conj {:event :skier/joins-queue :t (+ t skiing-time)})))
 
-(defmethod handle-event :lift/leaves [{:keys [lift/ride-time lift/chair-width lift/chair-period] :as state}
+(defmethod handle-event :lift/leaves [{:keys [lift/ride-time
+                                              lift/ride-time-sigma
+                                              lift/chair-width
+                                              lift/chair-period] :as state}
                                       {t :t}]
-  (let [riders (clamp (:skiers/waiting state) 0 chair-width)]
+  (let [ride-time (normalvariate ride-time ride-time-sigma)
+        riders (clamp (:skiers/waiting state) 0 chair-width)]
     (-> state
       (update :skiers/waiting - riders)
       (update :skiers/riding-lift + riders)
@@ -38,6 +55,7 @@
   {; simulation parameters
    :sim/end-time 50
    :lift/ride-time 10
+   :lift/ride-time-sigma 2
    :lift/chair-width 4
    :lift/chair-period 4
    :skiers/skiing-time 20
