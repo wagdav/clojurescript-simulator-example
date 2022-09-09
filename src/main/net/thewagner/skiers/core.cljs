@@ -1,6 +1,6 @@
 ; Example from https://github.com/mbrooker/simulator_example/blob/main/ski_sim.py
 (ns net.thewagner.skiers.core
-  (:require [goog.structs :as gstructs]
+  (:require [goog.structs :refer [PriorityQueue]]
             [goog.string :refer [format]]))
 
 (defn dec0 [x]
@@ -38,7 +38,7 @@
 
 (def initial-state
   {; simulation parameters
-   :sim/end-time 200
+   :sim/end-time 50
    :sim/skiing-time 20
    :lift/ride-time 10
    :lift/chair-width 4
@@ -52,19 +52,44 @@
    ; future event queue
    :events [{:event :lift/leaves :t 0}]})
 
+(defn events->queue [l]
+  (let [q (PriorityQueue.)]
+    (doseq [event l]
+      (.enqueue q (:t event) event))
+    q))
+
+(defn queue->events [^PriorityQueue queue]
+  (loop [res []
+         q queue]
+    (if (.isEmpty q)
+      res
+      (let [next-event (.dequeue ^PriorityQueue q)]
+        (recur (conj res next-event) q)))))
+
+(defn step [state]
+  (let [queue (events->queue (:events state))
+        event (.dequeue queue)]
+    (if event
+      (-> state
+        (assoc :events (queue->events queue))
+        (handle-event event)
+        (assoc :t (event :t)))
+      state)))
+
+(step initial-state)
+
 (defn simulate []
-  (loop [t 0
-         res [(assoc initial-state :t 0)]
-         state initial-state]
-    (let [{:keys [events sim/end-time]} state]
-      (if (and (seq events) (<= t end-time))
-        (let [ev (peek events)
-              new-state (handle-event (update state :events pop) ev)]
-          (println (format "%5d: %s" (ev :t) (select-keys state [:skiers/waiting
-                                                                 :skiers/riding-lift
-                                                                 :skiers/skiing])))
-          (recur (ev :t) (conj res (assoc new-state :t (ev :t))) new-state))
-        res))))
+  (loop [res []
+         state (assoc initial-state :t 0)]
+    (let [next-state (step state)
+          t (:t next-state)]
+      (if (>= t (:sim/end-time state))
+        res
+        (do
+          (println (format "%5d: %s" t (select-keys state [:skiers/waiting
+                                                           :skiers/riding-lift
+                                                           :skiers/skiing])))
+          (recur (conj res next-state) next-state))))))
 
 (comment
   (handle-event initial-state {:event :skier/joins-queue :t 0})

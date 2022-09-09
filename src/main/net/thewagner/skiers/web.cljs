@@ -23,13 +23,13 @@
                      {:t 7  :skiers/riding-lift 19}
                      {:t 8  :skiers/riding-lift 87}
                      {:t 9  :skiers/riding-lift 52}]}
-     :mark "line"
+     :mark "point"
      :encoding {:x {:field :t
                     :type "quantitative"
                     :title "time"}
                 :y {:field :skiers/skiing
                     :type "quantitative"
-                    :title "number of skiers"}}}))
+                    :title "persons skiing"}}}))
 
 (defn main []
   [:<>
