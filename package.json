@@ -1,0 +1,24 @@
+{
+  "name": "simple-simulations",
+  "version": "1.0.0",
+  "description": "Simple system simulations in Clojure/ClojureScript.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wagdav/simple-simulations.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wagdav/simple-simulations/issues"
+  },
+  "homepage": "https://github.com/wagdav/simple-simulations#readme",
+  "dependencies": {
+    "create-react-class": "^15.7.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.1.0"
+  }
+}

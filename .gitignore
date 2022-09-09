@@ -17,4 +17,6 @@ pom.xml.asc
 .nrepl-port
 .cpcache/
 
-# End of https://www.toptal.com/developers/gitignore/api/clojure
+.shadow-cljs
+node_modules
+public/js
