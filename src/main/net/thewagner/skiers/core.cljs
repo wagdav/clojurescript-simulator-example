@@ -1,6 +1,7 @@
 ; Example from https://github.com/mbrooker/simulator_example/blob/main/ski_sim.py
 (ns net.thewagner.skiers.core
-  (:require [shams.priority-queue :as pq]))
+  (:require [goog.structs :as gstructs]
+            [goog.string :refer [format]]))
 
 (defn dec0 [x]
   (max (dec x) 0))
@@ -37,7 +38,7 @@
 
 (def initial-state
   {; simulation parameters
-   :sim/end-time 100
+   :sim/end-time 200
    :sim/skiing-time 20
    :lift/ride-time 10
    :lift/chair-width 4
@@ -49,12 +50,11 @@
    :skiers/skiing 0
 
    ; future event queue
-   :events (pq/priority-queue
-             (fn event->priority [e] (- (:t e)))
-             :elements [{:event :lift/leaves :t 0}])})
+   :events [{:event :lift/leaves :t 0}]})
 
 (defn simulate []
   (loop [t 0
+         res [(assoc initial-state :t 0)]
          state initial-state]
     (let [{:keys [events sim/end-time]} state]
       (if (and (seq events) (<= t end-time))
@@ -63,8 +63,8 @@
           (println (format "%5d: %s" (ev :t) (select-keys state [:skiers/waiting
                                                                  :skiers/riding-lift
                                                                  :skiers/skiing])))
-          (recur (ev :t) new-state))
-        state))))
+          (recur (ev :t) (conj res (assoc new-state :t (ev :t))) new-state))
+        res))))
 
 (comment
   (handle-event initial-state {:event :skier/joins-queue :t 0})
