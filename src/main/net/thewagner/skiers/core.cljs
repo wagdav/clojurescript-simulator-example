@@ -1,7 +1,5 @@
 ; Example from https://github.com/mbrooker/simulator_example/blob/main/ski_sim.py
-(ns net.thewagner.skiers.core
-  (:require [goog.string :refer [format]])
-  (:import goog.structs.PriorityQueue))
+(ns net.thewagner.skiers.core)
 
 (defn dec0 [x]
   (max (dec x) 0))
@@ -51,43 +49,6 @@
 
    ; future event queue
    :events [{:event :lift/leaves :t 0}]})
-
-(defn events->queue [l]
-  (let [q (new PriorityQueue)]
-    (doseq [event l]
-      (.enqueue q (:t event) event))
-    q))
-
-(defn queue->events [queue]
-  (loop [res []
-         q queue]
-    (if (.isEmpty q)
-      res
-      (let [next-event (.dequeue ^PriorityQueue q)]
-        (recur (conj res next-event) q)))))
-
-(defn step [state]
-  (let [queue (events->queue (:events state))
-        event (.dequeue queue)]
-    (if event
-      (-> state
-        (assoc :events (queue->events queue))
-        (handle-event event)
-        (assoc :t (event :t)))
-      state)))
-
-(defn simulate []
-  (loop [res []
-         state (assoc initial-state :t 0)]
-    (let [next-state (step state)
-          t (:t next-state)]
-      (if (>= t (:sim/end-time state))
-        res
-        (do
-          (println (format "%5d: %s" t (select-keys state [:skiers/waiting
-                                                           :skiers/riding-lift
-                                                           :skiers/skiing])))
-          (recur (conj res next-state) next-state))))))
 
 (comment
   (handle-event initial-state {:event :skier/joins-queue :t 0})

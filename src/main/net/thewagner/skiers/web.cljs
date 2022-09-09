@@ -6,6 +6,7 @@
             [goog.string :as gstring]
             [goog.string.format]
             [react-vega]
+            [net.thewagner.des.core :as des]
             [net.thewagner.skiers.core :as skiers]))
 
 (goog-define ^string revision "main")
@@ -23,7 +24,7 @@
                   :title "persons skiing"}}})
 
 (defn main []
-  (let [data {:results (skiers/simulate)}]
+  (let [data {:results (des/simulate skiers/initial-state skiers/handle-event)}]
     [:<>
       [:section.section
         [:h1.title "Skiers simulation"]
