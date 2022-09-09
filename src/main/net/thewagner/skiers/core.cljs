@@ -1,7 +1,7 @@
 ; Example from https://github.com/mbrooker/simulator_example/blob/main/ski_sim.py
 (ns net.thewagner.skiers.core
-  (:require [goog.structs :refer [PriorityQueue]]
-            [goog.string :refer [format]]))
+  (:require [goog.string :refer [format]])
+  (:import goog.structs.PriorityQueue))
 
 (defn dec0 [x]
   (max (dec x) 0))
@@ -53,12 +53,12 @@
    :events [{:event :lift/leaves :t 0}]})
 
 (defn events->queue [l]
-  (let [q (PriorityQueue.)]
+  (let [q (new PriorityQueue)]
     (doseq [event l]
       (.enqueue q (:t event) event))
     q))
 
-(defn queue->events [^PriorityQueue queue]
+(defn queue->events [queue]
   (loop [res []
          q queue]
     (if (.isEmpty q)
@@ -75,8 +75,6 @@
         (handle-event event)
         (assoc :t (event :t)))
       state)))
-
-(step initial-state)
 
 (defn simulate []
   (loop [res []
