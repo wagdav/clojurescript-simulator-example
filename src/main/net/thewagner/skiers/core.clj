@@ -15,51 +15,59 @@
 
 (defmethod handle-event :default [state event] state)
 
-; Skier
-(defmethod handle-event :skier/joined-queue [state event]
+(defmethod handle-event :skier/joins-queue [state event]
   (-> state
     (update :skiers/skiing dec0)
     (update :skiers/waiting inc)))
 
-(defmethod handle-event :skier/left-lift [state event]
-  (let [skiing-time 50]
-    (-> state
-      (update :skiers/riding-lift dec0)
-      (update :skiers/skiing inc)
-      (update :events conj {:event :skier/joined-queue :t (+ (event :t) skiing-time)}))))
+(defmethod handle-event :skier/leaves-lift [{:keys [sim/skiing-time] :as state} {t :t}]
+  (-> state
+    (update :skiers/riding-lift dec0)
+    (update :skiers/skiing inc)
+    (update :events conj {:event :skier/joins-queue :t (+ t skiing-time)})))
 
-; Lift
-(defmethod handle-event :lift/leaving [state event]
-  (let [ride-time 10
-        chair-width 4
-        chair-period 4
-        riders (clamp (:skiers/waiting state) 0 chair-width)]
+(defmethod handle-event :lift/leaves [{:keys [lift/ride-time lift/chair-width lift/chair-period] :as state}
+                                      {t :t}]
+  (let [riders (clamp (:skiers/waiting state) 0 chair-width)]
     (-> state
       (update :skiers/waiting - riders)
       (update :skiers/riding-lift + riders)
-      (update :events into (replicate riders {:event :skier/left-lift :t (+ (event :t) ride-time)}))
-      (update :events conj {:event :lift/leaving :t (+ (event :t) chair-period)}))))
+      (update :events into (replicate riders {:event :skier/leaves-lift :t (+ t ride-time)}))
+      (update :events conj {:event :lift/leaves :t (+ t chair-period)}))))
 
 (def initial-state
-  {:skiers/waiting 2
+  {; simulation parameters
+   :sim/end-time 100
+   :sim/skiing-time 20
+   :lift/ride-time 10
+   :lift/chair-width 4
+   :lift/chair-period 4
+
+   ; stats
+   :skiers/waiting 2
    :skiers/riding-lift 0
    :skiers/skiing 0
-   :events (pq/priority-queue (fn [e] (- (:t e))) :elements [{:event :lift/leaving :t 0}])})
+
+   ; future event queue
+   :events (pq/priority-queue
+             (fn event->priority [e] (- (:t e)))
+             :elements [{:event :lift/leaves :t 0}])})
 
 (defn simulate []
-  (let [end-time 20]
-    (loop [t 0
-           state initial-state]
-      (let [{:keys [events]} state]
-        (if (and (seq events) (<= t end-time))
-          (let [ev (peek events)
-                new-state (handle-event (update state :events pop) ev)]
-            (println ev state)
-            (recur (ev :t) new-state))
-          state)))))
+  (loop [t 0
+         state initial-state]
+    (let [{:keys [events sim/end-time]} state]
+      (if (and (seq events) (<= t end-time))
+        (let [ev (peek events)
+              new-state (handle-event (update state :events pop) ev)]
+          (println (format "%5d: %s" (ev :t) (select-keys state [:skiers/waiting
+                                                                 :skiers/riding-lift
+                                                                 :skiers/skiing])))
+          (recur (ev :t) new-state))
+        state))))
 
 (comment
-  (handle-event initial-state {:event :skier/joined-queue :t 0})
-  (handle-event initial-state {:event :lift/leaving :t 0})
-  (handle-event initial-state {:event :skier/left-lift :t 0})
+  (handle-event initial-state {:event :skier/joins-queue :t 0})
+  (handle-event initial-state {:event :lift/leaves :t 0})
+  (handle-event initial-state {:event :skier/leaves-lift :t 0})
   (simulate))
