@@ -82,8 +82,34 @@
          res
          (recur (conj res next-state) next-state))))))
 
+(defn skiing-percentage [results]
+  (let [{:keys [current-time skiing total-skiers] :as res} (reduce
+                                                            (fn [state e] state
+                                                              (let [dt (- (e :t) (state :current-time))
+                                                                    skiing (* dt (e :skiers/skiing))
+                                                                    total-skiers (* dt (+ (e :skiers/skiing) (e :skiers/riding-lift) (e :skiiers/waiting)))]
+                                                                (-> state
+                                                                  (update :current-time + dt)
+                                                                  (update :skiing + skiing)
+                                                                  (update :total-skiers + total-skiers))))
+                                                            {:current-time 0 :skiing 0}
+                                                            results)]
+    (assoc res
+      :skiing-time-percentage (/ skiing (* current-time total-skiers))
+      :total-skiers (/ total-skiers current-time))))
+
+(defn run-sims []
+  (let [end-time 5000]
+    (for [n-skiers (range 25 1250 200)]
+      (-> default-initial-state
+          (assoc :skiers/waiting n-skiers
+                 :sim/end-time end-time)
+          simulate
+          skiing-percentage))))
+
 (comment
   (handle-event default-initial-state {:event :skier/joins-queue :t 0})
   (handle-event default-initial-state {:event :lift/leaves :t 0})
   (handle-event default-initial-state {:event :skier/leaves-lift :t 0})
-  (simulate))
+  (skiing-percentage (simulate (assoc default-initial-state :skiers/waiting 50)))
+  (run-sims))

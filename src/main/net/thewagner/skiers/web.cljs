@@ -22,17 +22,29 @@
                   :type "quantitative"
                   :title "persons skiing"}}})
 
+(def skiing-time-percentage
+  {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
+   :data {:name :results}
+   :mark "point"
+   :encoding {:x {:field :total-skiers
+                  :type "quantitative"
+                  :title "number of skiers"}
+              :y {:field :skiing-time-percentage
+                  :type "quantitative"
+                  :title "% of time spent skiing"}}})
+
 (defn main []
-  (let [data {:results (skiers/simulate)}]
+  (let [data {:results (skiers/simulate)}
+        res {:results (skiers/run-sims)}]
     [:<>
       [:section.section
         [:h1.title "Skiers simulation"]
-        [:div.columns
-          [:div.column
-            "Graph on the right"]
-          [:div.column
-            [:> react-vega/VegaLite {:spec personsSkiing
-                                     :data data}]]]]]))
+        [:p "Time evolution"]
+        [:> react-vega/VegaLite {:spec personsSkiing
+                                 :data data}]
+        [:p "Percentage of time spent skiing"]
+        [:> react-vega/VegaLite {:spec skiing-time-percentage
+                                 :data res}]]]))
 
 (defn mount []
   (rdom/render [main] (gdom/getElement "app")))
