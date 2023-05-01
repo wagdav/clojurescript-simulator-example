@@ -19,10 +19,13 @@
       (js/Math.sqrt (* -2.0 (js/Math.log u)))
       (js/Math.cos (* 2.0 js/Math.PI v)))))
 
-(defn normalvariate [mu sigma]
+(defn normalvariate [{:keys [mu sigma]}]
   (+
     (* sigma (standard_normal_bm))
     mu))
+
+(defn sample [d]
+  (normalvariate d))
 
 (defmulti handle-event (fn [state event] (:event event)))
 
@@ -33,36 +36,36 @@
     (update :skiers/skiing dec0)
     (update :skiers/waiting inc)))
 
-(defmethod handle-event :skier/leaves-lift [{:keys [skiers/skiing-time] :as state} {t :t}]
-  (-> state
-    (update :skiers/riding-lift dec0)
-    (update :skiers/skiing inc)
-    (update :events conj {:event :skier/joins-queue :t (+ t skiing-time)})))
+(defmethod handle-event :skier/leaves-lift [{:keys [skiers/speed slope/length] :as state} {t :t}]
+  (let [skiing-time (/ length (sample speed))]
+    (-> state
+      (update :skiers/riding-lift dec0)
+      (update :skiers/skiing inc)
+      (update :events conj {:event :skier/joins-queue :t (+ t skiing-time)}))))
 
 (defmethod handle-event :lift/leaves [{:keys [lift/ride-time
-                                              lift/ride-time-sigma
                                               lift/chair-width
                                               lift/chair-period] :as state}
                                       {t :t}]
-  (let [ride-time (normalvariate ride-time ride-time-sigma)
-        riders (clamp (:skiers/waiting state) 0 chair-width)]
+  (let [riders (clamp (:skiers/waiting state) 0 chair-width)]
     (-> state
       (update :skiers/waiting - riders)
       (update :skiers/riding-lift + riders)
-      (update :events into (replicate riders {:event :skier/leaves-lift :t (+ t ride-time)}))
+      (update :events into (replicate riders {:event :skier/leaves-lift :t (+ t (sample ride-time))}))
       (update :events conj {:event :lift/leaves :t (+ t chair-period)}))))
 
 (def default-initial-state
   {; simulation parameters
-   :sim/end-time 50
-   :lift/ride-time 10
-   :lift/ride-time-sigma 2
+   :sim/end-time 10000
+   :lift/ride-time {:mu 300 :sigma 30}
    :lift/chair-width 4
-   :lift/chair-period 4
-   :skiers/skiing-time 20
+   :lift/chair-period 7
+   :slope/length 3000
+   :skiers/total 25
+   :skiers/speed {:mu 5 :sigma 1 :unit "m/s"}
 
    ; stats
-   :skiers/waiting 2
+   :skiers/waiting 0
    :skiers/riding-lift 0
    :skiers/skiing 0
 
@@ -75,37 +78,23 @@
 
   ([initial-state]
    (loop [res []
-          state (assoc initial-state :t 0)]
+          state (assoc initial-state
+                       :t 0
+                       :skiers/waiting (:skiers/total initial-state))]
+
      (let [next-state (des/step state handle-event)
            t (:t next-state)]
        (if (>= t (:sim/end-time state))
          res
          (recur (conj res next-state) next-state))))))
 
-(defn skiing-percentage [results]
-  (let [{:keys [current-time skiing total-skiers] :as res} (reduce
-                                                            (fn [state e] state
-                                                              (let [dt (- (e :t) (state :current-time))
-                                                                    skiing (* dt (e :skiers/skiing))
-                                                                    total-skiers (* dt (+ (e :skiers/skiing) (e :skiers/riding-lift) (e :skiiers/waiting)))]
-                                                                (-> state
-                                                                  (update :current-time + dt)
-                                                                  (update :skiing + skiing)
-                                                                  (update :total-skiers + total-skiers))))
-                                                            {:current-time 0 :skiing 0}
-                                                            results)]
-    (assoc res
-      :skiing-time-percentage (/ skiing (* current-time total-skiers))
-      :total-skiers (/ total-skiers current-time))))
-
 (defn run-sims []
-  (let [end-time 5000]
-    (for [n-skiers (range 25 1250 200)]
-      (-> default-initial-state
-          (assoc :skiers/waiting n-skiers
-                 :sim/end-time end-time)
-          simulate
-          skiing-percentage))))
+  (for [n-skiers (range 25 1250 50)
+        chair-width [4 6]]
+    (-> default-initial-state
+        (assoc :skiers/total n-skiers)
+        (assoc :lift/chair-width chair-width)
+        simulate)))
 
 (comment
   (handle-event default-initial-state {:event :skier/joins-queue :t 0})

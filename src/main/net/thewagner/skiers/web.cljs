@@ -26,25 +26,39 @@
   {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
    :data {:name :results}
    :mark "point"
-   :encoding {:x {:field :total-skiers
+   :encoding {:x {:field :skiers/total
                   :type "quantitative"
                   :title "number of skiers"}
-              :y {:field :skiing-time-percentage
+              :y {:field :skiers/percentage
                   :type "quantitative"
-                  :title "% of time spent skiing"}}})
+                  :title "% of time spent skiing"}
+              :color {:field :lift/chair-width
+                      :type "nominal"
+                      :title "Chair width"}}})
+
+(defn mean [v]
+  (/ (reduce + v)
+     (count v)))
 
 (defn main []
-  (let [data {:results (skiers/simulate)}
-        res {:results (skiers/run-sims)}]
+  (let [single {:results (skiers/simulate)}
+        multi {:results
+                (map
+                  (fn [s]
+                    {:skiers/total (:skiers/total (first s))
+                     :lift/chair-width (:lift/chair-width (first s))
+                     :skiers/percentage (mean (map (fn [{:keys [skiers/skiing skiers/total]}] (/ skiing total))
+                                                   s))})
+                  (skiers/run-sims))}]
     [:<>
       [:section.section
         [:h1.title "Skiers simulation"]
         [:p "Time evolution"]
         [:> react-vega/VegaLite {:spec personsSkiing
-                                 :data data}]
+                                 :data single}]
         [:p "Percentage of time spent skiing"]
         [:> react-vega/VegaLite {:spec skiing-time-percentage
-                                 :data res}]]]))
+                                 :data multi}]]]))
 
 (defn mount []
   (rdom/render [main] (gdom/getElement "app")))
