@@ -17,10 +17,24 @@
    :mark "point"
    :encoding {:x {:field :t
                   :type "quantitative"
-                  :title "time"}
+                  :title "time"
+                  :scale {:zero false}}
               :y {:field :skiers/skiing
                   :type "quantitative"
                   :title "persons skiing"}}})
+
+(def skiers-waiting
+  {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
+   :description "A simple bar chart with embedded data."
+   :data {:name :results}
+   :mark "point"
+   :encoding {:x {:field :t
+                  :type "quantitative"
+                  :title "time"
+                  :scale {:zero false}}
+              :y {:field :skiers/waiting
+                  :type "quantitative"
+                  :title "persons waiting"}}})
 
 (def skiing-time-percentage
   {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
@@ -40,25 +54,41 @@
   (/ (reduce + v)
      (count v)))
 
+(defonce single (r/atom {:results [skiers/default-initial-state]}))
+
+(defn reset-state! []
+  (reset! single {:results [skiers/default-initial-state]}))
+
+(defn advance! []
+  (swap! single (fn [s]
+                  (->> (last (:results s))
+                       skiers/step
+                       (conj (:results s))
+                       (take-last 200)
+                       vec
+                       (assoc s :results)))))
+
 (defn main []
-  (let [single {:results (skiers/simulate)}
-        multi {:results
-                (map
-                  (fn [s]
-                    {:skiers/total (:skiers/total (first s))
-                     :lift/chair-width (:lift/chair-width (first s))
-                     :skiers/percentage (mean (map (fn [{:keys [skiers/skiing skiers/total]}] (/ skiing total))
-                                                   s))})
-                  (skiers/run-sims))}]
-    [:<>
-      [:section.section
-        [:h1.title "Skiers simulation"]
-        [:p "Time evolution"]
-        [:> react-vega/VegaLite {:spec personsSkiing
-                                 :data single}]
-        [:p "Percentage of time spent skiing"]
-        [:> react-vega/VegaLite {:spec skiing-time-percentage
-                                 :data multi}]]]))
+  (let [multi {} #_{:results
+                     (map
+                       (fn [s]
+                         {:skiers/total (:skiers/total (first s))
+                          :lift/chair-width (:lift/chair-width (first s))
+                          :skiers/percentage (mean (map (fn [{:keys [skiers/skiing skiers/total]}] (/ skiing total))
+                                                        s))})
+                       (skiers/run-sims))}]
+    (fn [_]
+      [:<>
+        [:section.section
+          [:h1.title "Skiers simulation"]
+          [:p "Time evolution"]
+          [:> react-vega/VegaLite {:spec personsSkiing
+                                   :data @single}]
+          [:> react-vega/VegaLite {:spec skiers-waiting
+                                   :data @single}]
+          [:p "Percentage of time spent skiing"]
+          [:> react-vega/VegaLite {:spec skiing-time-percentage
+                                   :data multi}]]])))
 
 (defn mount []
   (rdom/render [main] (gdom/getElement "app")))
@@ -73,8 +103,10 @@
   (require '[shadow.cljs.devtools.api :as shadow])
   (shadow/repl :app)
   ; Exit the CLJS session
-  :cljs/quit
+  :cljs/quit)
 
-  (swap! vlSpec update-in [:data :values 5 :b] + 10)
-  (swap! vlSpec update-in [:data :values] skiers/simulate)
-  (second (@vlSpec :data)))
+(comment
+  (last (:results (deref single)))
+  (deref single)
+  (reset-state!)
+  (dotimes [_ 10] (advance!)))

@@ -56,21 +56,24 @@
 
 (def default-initial-state
   {; simulation parameters
+   :t 0
    :sim/end-time 10000
    :lift/ride-time {:mu 300 :sigma 30}
    :lift/chair-width 4
    :lift/chair-period 7
    :slope/length 3000
-   :skiers/total 25
    :skiers/speed {:mu 5 :sigma 1 :unit "m/s"}
 
    ; stats
-   :skiers/waiting 0
+   :skiers/waiting 25
    :skiers/riding-lift 0
    :skiers/skiing 0
 
    ; future event queue
    :events [{:event :lift/leaves :t 0}]})
+
+(defn step [state]
+  (des/step state handle-event))
 
 (defn simulate
   ([]
@@ -78,13 +81,10 @@
 
   ([initial-state]
    (loop [res []
-          state (assoc initial-state
-                       :t 0
-                       :skiers/waiting (:skiers/total initial-state))]
+          state initial-state]
 
-     (let [next-state (des/step state handle-event)
-           t (:t next-state)]
-       (if (>= t (:sim/end-time state))
+     (let [next-state (step state)]
+       (if (>= (:t next-state) (:sim/end-time state))
          res
          (recur (conj res next-state) next-state))))))
 
@@ -92,7 +92,7 @@
   (for [n-skiers (range 25 1250 50)
         chair-width [4 6]]
     (-> default-initial-state
-        (assoc :skiers/total n-skiers)
+        (assoc :skiers/waiting n-skiers)
         (assoc :lift/chair-width chair-width)
         simulate)))
 
