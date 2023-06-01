@@ -1,6 +1,3 @@
-# Created by https://www.toptal.com/developers/gitignore/api/clojure
-# Edit at https://www.toptal.com/developers/gitignore?templates=clojure
-
 ### Clojure ###
 pom.xml
 pom.xml.asc
@@ -17,6 +14,10 @@ pom.xml.asc
 .nrepl-port
 .cpcache/
 
-.shadow-cljs
+# Nix
+result
+
+# shadow-cljs
 node_modules
 public/js
+.shadow-cljs

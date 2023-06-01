@@ -13,7 +13,6 @@
       inputs = {
         nixpkgs.follows = "nixpkgs";
         flake-compat.follows = "flake-compat";
-        flake-utils.follows = "flake-utils";
       };
     };
   };
@@ -31,13 +30,13 @@
         classpath = clj-deps.makeClasspaths { };
 
         buildSite = pkgs.stdenv.mkDerivation {
-          name = "simple-simulations";
+          name = "simple-simulations-${version}";
 
           buildInputs = [ pkgs.clojure ];
 
           nodeModules = pkgs.mkYarnModules rec {
             pname = "simple-simulations";
-            name = "simple-simulations";
+            name = "simple-simulations-node-modules-${version}";
             inherit version;
             packageJSON = ./package.json;
             yarnLock = ./yarn.lock;
