@@ -10,54 +10,51 @@
 
 (goog-define ^string revision "main")
 
-(def personsSkiing
+(def skiers-absolute
   {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
    :description "A simple bar chart with embedded data."
    :data {:name :results}
-   :mark "point"
+   :transform [{:fold [:skiers/skiing :skiers/waiting :skiers/riding-lift]
+                :as ["state" "number-of-skiers"]}]
+   :layer [{:mark "line"
+            :encoding {:x {:field :t
+                           :type "quantitative"
+                           :title "time"
+                           :scale {:zero false}}
+                       :y {:field "number-of-skiers"
+                           :type "quantitative"
+                           :title "Number of skiers"}
+                       :color {:field "state"}}}
+           {:mark {:type "line"
+                   :color "gray"}
+            :encoding {:x {:field :t
+                           :type "quantitative"}
+                       :y {:aggregate "sum"
+                           :field "number-of-skiers"}}}]})
+
+(def skiers-percentage
+  {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
+   :description "A simple bar chart with embedded data."
+   :data {:name :results}
+   :transform [{:fold [:skiers/skiing :skiers/waiting :skiers/riding-lift]
+                :as ["state" "number-of-skiers"]}]
+   :mark "bar"
    :encoding {:x {:field :t
                   :type "quantitative"
                   :title "time"
                   :scale {:zero false}}
-              :y {:field :skiers/skiing
+              :y {:field "number-of-skiers"
                   :type "quantitative"
-                  :title "persons skiing"}}})
-
-(def skiers-waiting
-  {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
-   :description "A simple bar chart with embedded data."
-   :data {:name :results}
-   :mark "point"
-   :encoding {:x {:field :t
-                  :type "quantitative"
-                  :title "time"
-                  :scale {:zero false}}
-              :y {:field :skiers/waiting
-                  :type "quantitative"
-                  :title "persons waiting"}}})
-
-(def skiing-time-percentage
-  {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
-   :data {:name :results}
-   :mark "point"
-   :encoding {:x {:field :skiers/total
-                  :type "quantitative"
-                  :title "number of skiers"}
-              :y {:field :skiers/percentage
-                  :type "quantitative"
-                  :title "% of time spent skiing"}
-              :color {:field :lift/chair-width
-                      :type "nominal"
-                      :title "Chair width"}}})
-
-(defn mean [v]
-  (/ (reduce + v)
-     (count v)))
+                  :stack "normalize"
+                  :title "Percentage of skiers"}
+              :color {:field "state"}}})
 
 (defonce single (r/atom {:results [skiers/default-initial-state]}))
+(defonce state (r/atom {:running true}))
 
 (defn reset-state! []
-  (reset! single {:results [skiers/default-initial-state]}))
+  (reset! single {:results [skiers/default-initial-state]})
+  (reset! state {:running true}))
 
 (defn advance! []
   (swap! single (fn [s]
@@ -68,27 +65,43 @@
                        vec
                        (assoc s :results)))))
 
+(defn tick! []
+  (when (:running @state)
+    (advance!))
+  (js/setTimeout tick! 100))
+
+(defn start! []
+  (swap! state assoc :running true))
+
+(defn stop! []
+  (swap! state assoc :running false))
+
+(defn toggle-button []
+  (if (:running @state)
+    [:button.button.is-primary {:on-click #(stop!)} "Pause"]
+    [:button.button.is-primary {:on-click #(start!)} "Resume"]))
+
+(defn reset-button []
+  [:button.button.is-danger {:type "reset" :on-click #(reset-state!)} "Restart"])
+
 (defn main []
-  (let [multi {} #_{:results
-                     (map
-                       (fn [s]
-                         {:skiers/total (:skiers/total (first s))
-                          :lift/chair-width (:lift/chair-width (first s))
-                          :skiers/percentage (mean (map (fn [{:keys [skiers/skiing skiers/total]}] (/ skiing total))
-                                                        s))})
-                       (skiers/run-sims))}]
-    (fn [_]
-      [:<>
-        [:section.section
-          [:h1.title "Skiers simulation"]
-          [:p "Time evolution"]
-          [:> react-vega/VegaLite {:spec personsSkiing
-                                   :data @single}]
-          [:> react-vega/VegaLite {:spec skiers-waiting
-                                   :data @single}]
-          [:p "Percentage of time spent skiing"]
-          [:> react-vega/VegaLite {:spec skiing-time-percentage
-                                   :data multi}]]])))
+  [:<>
+    [:section.section
+      [:h1.title "Skiers simulation"]]
+    [:section.section
+      [:div.buttons.is-centered
+        [toggle-button]
+        [reset-button]]]
+    [:section.section
+      [:div.columns
+        [:div.column
+          [:> react-vega/VegaLite {:spec skiers-absolute
+                                   :data @single
+                                   :actions false}]]
+       [:div.column
+         [:> react-vega/VegaLite {:spec skiers-percentage
+                                  :data @single
+                                  :actions false}]]]]])
 
 (defn mount []
   (rdom/render [main] (gdom/getElement "app")))
@@ -96,7 +109,10 @@
 (defn ^:dev/after-load on-reload []
   (mount))
 
-(defonce startup (do (mount) true))
+(defonce startup
+  (do (mount)
+      (tick!)
+      true))
 
 (comment
   ; Evaluate these lines to enter into a ClojureScript REPL
@@ -107,6 +123,9 @@
 
 (comment
   (last (:results (deref single)))
-  (deref single)
+  (:running @state)
   (reset-state!)
+  (start!)
+  (stop!)
+  (swap! assoc-in [:results])
   (dotimes [_ 10] (advance!)))
