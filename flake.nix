@@ -1,5 +1,5 @@
 {
-  description = "Simple simulations";
+  description = "Numerical simulator in ClojureScript";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.05";
@@ -30,13 +30,13 @@
         classpath = clj-deps.makeClasspaths { };
 
         buildSite = pkgs.stdenv.mkDerivation {
-          name = "simple-simulations-${version}";
+          name = "clojurescript-simulator-example-${version}";
 
           buildInputs = [ pkgs.clojure ];
 
           nodeModules = pkgs.mkYarnModules rec {
-            pname = "simple-simulations";
-            name = "simple-simulations-node-modules-${version}";
+            pname = "clojurescript-simulator-example";
+            name = "clojurescript-simulator-example-node-modules-${version}";
             inherit version;
             packageJSON = ./package.json;
             yarnLock = ./yarn.lock;

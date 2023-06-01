@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/wagdav/simple-simulations.git"
+    "url": "git+https://github.com/wagdav/clojurescript-simulator-example.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/wagdav/simple-simulations/issues"
+    "url": "https://github.com/wagdav/clojurescript-simulator-example/issues"
   },
-  "homepage": "https://github.com/wagdav/simple-simulations#readme",
+  "homepage": "https://github.com/wagdav/clojurescript-simulator-example#readme",
   "dependencies": {
     "buffer": "^6.0.3",
     "create-react-class": "^15.7.0",

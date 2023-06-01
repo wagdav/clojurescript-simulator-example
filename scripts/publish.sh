@@ -4,5 +4,5 @@
 set -eu
 
 SITE=$(nix-build --no-out-link -A packages.x86_64-linux.site)
-ghp-import --message "Automatic update from https://github.com/wagdav/simple-simulations" "$SITE"
+ghp-import --message "Automatic update from https://github.com/wagdav/clojurescript-simulator-example" "$SITE"
 git push --force origin gh-pages:gh-pages
