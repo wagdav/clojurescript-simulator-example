@@ -1,4 +1,4 @@
-# Simple simulations
+# Numerical simulator example in ClojureScript
 
 ## Development
 
