@@ -16,21 +16,15 @@
    :data {:name :results}
    :transform [{:fold [:skiers/skiing :skiers/waiting :skiers/riding-lift]
                 :as ["state" "number-of-skiers"]}]
-   :layer [{:mark "line"
-            :encoding {:x {:field :t
-                           :type "quantitative"
-                           :title "time"
-                           :scale {:zero false}}
-                       :y {:field "number-of-skiers"
-                           :type "quantitative"
-                           :title "Number of skiers"}
-                       :color {:field "state"}}}
-           {:mark {:type "line"
-                   :color "gray"}
-            :encoding {:x {:field :t
-                           :type "quantitative"}
-                       :y {:aggregate "sum"
-                           :field "number-of-skiers"}}}]})
+   :mark "line"
+   :encoding {:x {:field :t
+                  :type "quantitative"
+                  :title "time"
+                  :scale {:zero false}}
+              :y {:field "number-of-skiers"
+                  :type "quantitative"
+                  :title "Number of skiers"}
+              :color {:field "state"}}})
 
 (def skiers-percentage
   {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
