@@ -2,7 +2,7 @@
   (:require [cljs.core.async :as async]
             [goog.dom :as gdom]
             [reagent.core :as r]
-            [reagent.dom :as rdom]
+            [reagent.dom.client :as rclient]
             [goog.string :as gstring]
             [goog.string.format]
             [react-vega]
@@ -97,16 +97,15 @@
                                   :data @single
                                   :actions false}]]]]])
 
-(defn mount []
-  (rdom/render [main] (gdom/getElement "app")))
+(defonce dom-root
+   (rclient/create-root (gdom/getElement "app")))
 
-(defn ^:dev/after-load on-reload []
-  (mount))
+; https://code.thheller.com/blog/shadow-cljs/2019/08/25/hot-reload-in-clojurescript.html
+(defn ^:dev/after-load start []
+  (rclient/render dom-root [main]))
 
-(defonce startup
-  (do (mount)
-      (tick!)
-      true))
+(defn init []
+  (start))
 
 (comment
   ; Evaluate these lines to enter into a ClojureScript REPL
