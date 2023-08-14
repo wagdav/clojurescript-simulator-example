@@ -59,11 +59,6 @@
                        vec
                        (assoc s :results)))))
 
-(defn tick! []
-  (when (:running @state)
-    (advance!))
-  (js/setTimeout tick! 100))
-
 (defn start! []
   (swap! state assoc :running true))
 
@@ -79,6 +74,8 @@
   [:button.button.is-danger {:type "reset" :on-click #(reset-state!)} "Restart"])
 
 (defn main []
+  (if (:running @state)
+    (js/setTimeout #(advance!) 100))
   [:<>
     [:section.section
       [:h1.title "Skiers simulation"]]
