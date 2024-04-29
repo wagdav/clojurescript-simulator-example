@@ -24,6 +24,6 @@
     "react-dom": "^18.1.0",
     "react-vega": "^7.6.0",
     "vega": "^5.28.0",
-    "vega-lite": "5.16.3"
+    "vega-lite": "5.18.0"
   }
 }
