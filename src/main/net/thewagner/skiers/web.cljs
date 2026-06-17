@@ -1,107 +1,105 @@
 (ns net.thewagner.skiers.web
-  (:require [cljs.core.async :as async]
-            [goog.dom :as gdom]
-            [reagent.core :as r]
-            [reagent.dom.client :as rclient]
+  (:require [goog.dom :as gdom]
             [goog.string :as gstring]
             [goog.string.format]
-            [react-vega]
-            [net.thewagner.skiers.core :as skiers]))
+            [replicant.alias :refer [defalias]]
+            [replicant.dom :as r]
+            [net.thewagner.skiers.core :as skiers])
+  (:refer-global :only [uPlot]))
 
 (goog-define ^string revision "main")
 
-(def skiers-absolute
-  {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
-   :description "A simple bar chart with embedded data."
-   :data {:name :results}
-   :transform [{:fold [:skiers/skiing :skiers/waiting :skiers/riding-lift]
-                :as ["state" "number-of-skiers"]}]
-   :mark "line"
-   :encoding {:x {:field :t
-                  :type "quantitative"
-                  :title "time"
-                  :scale {:zero false}}
-              :y {:field "number-of-skiers"
-                  :type "quantitative"
-                  :title "Number of skiers"}
-              :color {:field "state"}}})
+(defalias uplot-chart [attrs _children]
+  [:div
+    (-> attrs
+        (assoc :replicant/on-mount
+               (fn [{:replicant/keys [node remember]}]
+                 (let [opts (dissoc attrs ::data)
+                       data (::data attrs)
+                       chart (uPlot. (clj->js opts) (clj->js data) node)]
+                   (remember chart))))
+        (assoc :replicant/on-update
+               (fn [{:replicant/keys [memory]}]
+                 (let [chart memory]
+                   (.setData chart (clj->js (::data attrs)))))))])
 
-(def skiers-percentage
-  {:$schema "https://vega.github.io/schema/vega-lite/v5.json"
-   :description "A simple bar chart with embedded data."
-   :data {:name :results}
-   :transform [{:fold [:skiers/skiing :skiers/waiting :skiers/riding-lift]
-                :as ["state" "number-of-skiers"]}]
-   :mark "bar"
-   :encoding {:x {:field :t
-                  :type "quantitative"
-                  :title "time"
-                  :scale {:zero false}}
-              :y {:field "number-of-skiers"
-                  :type "quantitative"
-                  :stack "normalize"
-                  :title "Percentage of skiers"}
-              :color {:field "state"}}})
-
-(defonce single (r/atom {:results [skiers/default-initial-state]}))
-(defonce state (r/atom {:running true}))
+(defonce store
+  (atom {:results [skiers/default-initial-state]
+         :running true}))
 
 (defn reset-state! []
-  (reset! single {:results [skiers/default-initial-state]})
-  (reset! state {:running true}))
+  (reset! store {:results [skiers/default-initial-state]
+                 :running true}))
 
 (defn advance! []
-  (swap! single (fn [s]
-                  (->> (last (:results s))
-                       skiers/step
-                       (conj (:results s))
-                       (take-last 200)
-                       vec
-                       (assoc s :results)))))
+  (swap! store (fn [s]
+                 (->> (last (:results s))
+                      skiers/step
+                      (conj (:results s))
+                      (take-last 200)
+                      vec
+                      (assoc s :results)))))
 
 (defn start! []
-  (swap! state assoc :running true))
+  (swap! store assoc :running true))
 
 (defn stop! []
-  (swap! state assoc :running false))
+  (swap! store assoc :running false))
 
-(defn toggle-button []
-  (if (:running @state)
-    [:button.button.is-primary {:on-click #(stop!)} "Pause"]
-    [:button.button.is-primary {:on-click #(start!)} "Resume"]))
+(defn toggle-button [state]
+  (if (:running state)
+    [:button.button.is-primary {:on {:click #(stop!)}} "Pause"]
+    [:button.button.is-primary {:on {:click #(start!)}} "Resume"]))
 
 (defn reset-button []
-  [:button.button.is-danger {:type "reset" :on-click #(reset-state!)} "Restart"])
+  [:button.button.is-danger {:type "reset"
+                             :on {:click #(reset-state!)}}
+                            "Restart"])
 
-(defn main []
-  (if (:running @state)
-    (js/setTimeout #(advance!) 100))
-  [:<>
+(defn main [state]
+  (list
     [:section.section
       [:h1.title "Skiers simulation"]]
     [:section.section
       [:div.buttons.is-centered
-        [toggle-button]
-        [reset-button]]]
+        (toggle-button state)
+        (reset-button)]]
     [:section.section
-      [:div.columns
-        [:div.column
-          [:> react-vega/VegaLite {:spec skiers-absolute
-                                   :data @single
-                                   :actions false}]]
-       [:div.column
-         [:> react-vega/VegaLite {:spec skiers-percentage
-                                  :data @single
-                                  :actions false}]]]]])
+      [:center
+        [uplot-chart {::width 600
+                      ::height 400
+                      ::scales {:x {:time false}}
+                      ::axes [{}
+                              {:label "number of skiers"}]
+                      ::series [{}
+                                {:stroke "blue"
+                                 :label "riding lift"}
+                                {:stroke "orange"
+                                 :label "skiing"}
+                                {:stroke "red"
+                                 :label "waiting"}]
+                      ::data [(map :t (:results state))
+                              (map :skiers/skiing (:results state))
+                              (map :skiers/riding-lift (:results state))
+                              (map :skiers/waiting (:results state))]}]]]))
 
-(defonce dom-root
-   (rclient/create-root (gdom/getElement "app")))
+(defonce dom-root (gdom/getElement "app"))
+
+(defn render! [state]
+  (r/render dom-root (main state)))
 
 ; https://code.thheller.com/blog/shadow-cljs/2019/08/25/hot-reload-in-clojurescript.html
 (defn ^:dev/after-load start []
-  (rclient/render dom-root [main]))
+  (render! @store))
+
+(defn tick! []
+  (when (:running @store)
+    (advance!))
+  (js/setTimeout tick! 100))
 
 (defn init []
+  (add-watch store ::render (fn [_ _ _ state] (render! state)))
+  (tick!)
   (start))
 
 (comment

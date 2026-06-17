@@ -34,8 +34,8 @@ let repos = [
       inherit repos;
       artifactId = "transit-java";
       groupId = "com.cognitect";
-      sha512 = "294725b1003323981d1ffa0a6952fbe152e7704b2cbef91c848958df56d0b4d8642eae717398d9859d8e04d77ccebc64e238db2b12d637b6fef43c25a2191999";
-      version = "1.0.362";
+      sha512 = "e02d1b2eb0b768913f5618b4b68ad0cb39d17e738c5e445c65824662da241f3192ec019ac8153465882475963b3584bf467171c5c945e096d2727b55d8e281ae";
+      version = "1.0.371";
 
     };
     paths = [ src ];
@@ -47,8 +47,8 @@ let repos = [
       inherit repos;
       artifactId = "data.json";
       groupId = "org.clojure";
-      sha512 = "04b7c0c90cb26d643a0b3e7e1ffa2d2d423e977c1454ee5ea7c2e75547ecbc113838df17b797902a975f5ea2184a81a45b605a4d82970805e2bbb02feebc578d";
-      version = "2.4.0";
+      sha512 = "063ccd32448d277d7716e4aec2694bdbcea00f25c055d7b4adb9b6743f1d95267f81628d784c8fcd7bb48ec372c067b5c807c7c833b42f0663f96198f7092d8a";
+      version = "2.5.2";
 
     };
     paths = [ src ];
@@ -60,8 +60,8 @@ let repos = [
       inherit repos;
       artifactId = "clojure";
       groupId = "org.clojure";
-      sha512 = "1925300a0fe4cc9fc3985910bb04ae65a19ce274dacc5ec76e708cfa87a7952a0a77282b083d0aebb2206afff619af73a57f0d661a3423601586f0829cc7956b";
-      version = "1.11.1";
+      sha512 = "236b69613668941eb0bc610104f1d05d8972b24cca61ec22a0259f7ca81c562bd856cd9d0af6341e8c8049049727613df6d3fda1136c758945d452e2b93b2264";
+      version = "1.12.5";
 
     };
     paths = [ src ];
@@ -75,6 +75,19 @@ let repos = [
       groupId = "thheller";
       sha512 = "3d0b79eff075c38389d9f3501c60bf91a28a6ee25fc0a2df3159b365eff556e2ec8499b69860783478705ea33ff18e85fc0150229d5725e58e96f362bdc777f1";
       version = "0.0.22";
+
+    };
+    paths = [ src ];
+  }
+
+  rec {
+    name = "javax.activation-api/javax.activation";
+    src = fetchMavenArtifact {
+      inherit repos;
+      artifactId = "javax.activation-api";
+      groupId = "javax.activation";
+      sha512 = "8ee0db43ae402f0079a836ef2bff5d15160e3ff9d585c3283f4cf474be4edd2fcc8714d8f032efd72cae77ec5f6d304fc24fa094d9cdba5cf72966cc964af6c9";
+      version = "1.2.0";
 
     };
     paths = [ src ];
@@ -99,8 +112,8 @@ let repos = [
       inherit repos;
       artifactId = "tools.analyzer";
       groupId = "org.clojure";
-      sha512 = "c51752a714848247b05c6f98b54276b4fe8fd44b3d970070b0f30cd755ac6656030fd8943a1ffd08279af8eeff160365be47791e48f05ac9cc2488b6e2dfe504";
-      version = "1.1.0";
+      sha512 = "a99d68868959c7eef901f57dfb2069cc8be9313ecf67c7275eb2291231e344a3d7b8a184ede38780223acee51b9381897696912a02de58242c08164542c47830";
+      version = "1.2.0";
 
     };
     paths = [ src ];
@@ -120,26 +133,26 @@ let repos = [
   }
 
   rec {
-    name = "core.specs.alpha/org.clojure";
+    name = "shadow-http/com.thheller";
     src = fetchMavenArtifact {
       inherit repos;
-      artifactId = "core.specs.alpha";
-      groupId = "org.clojure";
-      sha512 = "f521f95b362a47bb35f7c85528c34537f905fb3dd24f2284201e445635a0df701b35d8419d53c6507cc78d3717c1f83cda35ea4c82abd8943cd2ab3de3fcad70";
-      version = "0.2.62";
+      artifactId = "shadow-http";
+      groupId = "com.thheller";
+      sha512 = "6e9b9e820bb9d7d16f055404360d5399a6e38ffc395e9e0d7c6aad63eade4f0b3af404112d02d0eba05c3f1ae50c2b5d2df807e0a1062a1b1114645f0e0a05cc";
+      version = "0.1.8";
 
     };
     paths = [ src ];
   }
 
   rec {
-    name = "undertow-core/io.undertow";
+    name = "core.specs.alpha/org.clojure";
     src = fetchMavenArtifact {
       inherit repos;
-      artifactId = "undertow-core";
-      groupId = "io.undertow";
-      sha512 = "d1dcc1236ac98518318bea1ab99037c4f447d431319dc9fa8a9bc830c2c3cee0f7b804cfb5492e71e68e96a128f259059de8d6404237572c78643c8824818b9b";
-      version = "2.2.4.Final";
+      artifactId = "core.specs.alpha";
+      groupId = "org.clojure";
+      sha512 = "d186fe9ac480ab7be989c6174d3931d1530856957177b1ee2794cb5ff6c4173467ff34c7e929e1a2b34d4b0e25abd7707f8d572db4c52e43c7218eac8822938f";
+      version = "0.4.74";
 
     };
     paths = [ src ];
@@ -164,8 +177,8 @@ let repos = [
       inherit repos;
       artifactId = "spec.alpha";
       groupId = "org.clojure";
-      sha512 = "ddfe4fa84622abd8ac56e2aa565a56e6bdc0bf330f377ff3e269ddc241bb9dbcac332c13502dfd4c09c2c08fe24d8d2e8cf3d04a1bc819ca5657b4e41feaa7c2";
-      version = "0.3.218";
+      sha512 = "2ac83d13ed607b19c1ca651ea54587bf502f0ee89ca042d0f79711e862ea83dbb5326db05523ede58529a258a3fa018e23363740c67b66c682aaf73260b23fab";
+      version = "0.5.238";
 
     };
     paths = [ src ];
@@ -177,21 +190,8 @@ let repos = [
       inherit repos;
       artifactId = "tools.cli";
       groupId = "org.clojure";
-      sha512 = "1d88aa03eb6a664bf2c0ce22c45e7296d54d716e29b11904115be80ea1661623cf3e81fc222d164047058239010eb678af92ffedc7c3006475cceb59f3b21265";
-      version = "1.0.206";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
-    name = "commons-fileupload/commons-fileupload";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "commons-fileupload";
-      groupId = "commons-fileupload";
-      sha512 = "a8780b7dd7ab68f9e1df38e77a5207c45ff50ec53d8b1476570d069edc8f59e52fb1d0fc534d7e513ac5a01b385ba73c320794c82369a72bd6d817a3b3b21f39";
-      version = "1.4";
+      sha512 = "6ff7e8805c246e8c999b8d1da4ece0dc848dccf23d5beaac5327b891a00da000cc1cc5ef8d7025b38ea27969827a695c100eaa7e69fb77454361aa46f4c9f033";
+      version = "1.1.230";
 
     };
     paths = [ src ];
@@ -203,21 +203,8 @@ let repos = [
       inherit repos;
       artifactId = "tools.analyzer.jvm";
       groupId = "org.clojure";
-      sha512 = "36ad50a7a79c47dea16032fc4b927bd7b56b8bedcbd20cc9c1b9c85edede3a455369b8806509b56a48457dcd32e1f708f74228bce2b4492bd6ff6fc4f1219d56";
-      version = "1.2.2";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
-    name = "wildfly-common/org.wildfly.common";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "wildfly-common";
-      groupId = "org.wildfly.common";
-      sha512 = "f99f23af23a1cc45035b87ab422affdb911769ee63dc5a1c9b3e7a39ebefee07542d2388118282b20113c196e28abce8f87cafc8b0213cdc692381edce035c46";
-      version = "1.5.2.Final";
+      sha512 = "5f882981c5e00fe060caa006e8309c32f5f424f9224bdb1fcbe5ec83fd32f6f32052ef3933c678bb5be8885ca8c12e0b20a3090268cb9e890f2bd30c592ba680";
+      version = "1.3.3";
 
     };
     paths = [ src ];
@@ -242,8 +229,8 @@ let repos = [
       inherit repos;
       artifactId = "transit-cljs";
       groupId = "com.cognitect";
-      sha512 = "526d3331857586ab7e8edb78795c375aaafe6dc3da24706663918a7dc38e25db7d0f554c334ec3be0334050d59d8616bd9cd6c9a90cf4bb4b33b1e0ea294d29c";
-      version = "0.8.269";
+      sha512 = "a8cb6bb4f23867fd79ca46619278aae1a53e9e171216d1cf7ed9ba157dbd6a0798e5440a080a2fc0a9498781598681ec4644dcf317bebefbf74bb6c9f47273d2";
+      version = "0.8.280";
 
     };
     paths = [ src ];
@@ -255,8 +242,8 @@ let repos = [
       inherit repos;
       artifactId = "google-closure-library";
       groupId = "org.clojure";
-      sha512 = "85e259bd189554659fdcb2f137c7de81a8aac97669b865254c59c713e6a8b79eb4272fa1444b9bfc5d1c8447140daa53aac74cacd21527e6186cf1ec0e776d32";
-      version = "0.0-20211011-0726fdeb";
+      sha512 = "98f10f546edbe75352aee5600870ac636dfd541472b3f54379b71157361e21154f0fcdcc137b01626e38ac55481ca03fbb2f482c845cbccc740ecb3bc1f3917e";
+      version = "0.0-20250515-f04e4c0e";
 
     };
     paths = [ src ];
@@ -268,8 +255,8 @@ let repos = [
       inherit repos;
       artifactId = "shadow-cljs";
       groupId = "thheller";
-      sha512 = "090a6b3dbb4973ebcaf17cc32b8d5d32f6bf5c5ed3cbd556c7cff97241831f077d7b727a30ee424367bb6eb22322c5599559a1437f4145042650344566ffb2d5";
-      version = "2.19.0";
+      sha512 = "25c7c9780d73b4cbe085342c88d64a5afc8c173415c11c47154ce370def85a8721ad4ad67752f7ef1070f2d5856c998f79efb43654e6ed22749ec158b57710a5";
+      version = "3.4.11";
 
     };
     paths = [ src ];
@@ -281,8 +268,8 @@ let repos = [
       inherit repos;
       artifactId = "clojurescript";
       groupId = "org.clojure";
-      sha512 = "0a80e3b2e455f71ec2b88de115601e1971e88d7899d769568541925da433c55876ec1ce1f9916f9cc4a7de1be4da099782f848ee21c673d08f8277e529d5a74d";
-      version = "1.11.51";
+      sha512 = "2d7c83194e4d3d2a8e45dc7b3542427e4876b0bdc40d7ea54cb52604eeed54265f9bda4cd89276441266058b3b8c7a30b47692e10df06023c3665c9711fbd7cf";
+      version = "1.12.134";
 
     };
     paths = [ src ];
@@ -294,8 +281,8 @@ let repos = [
       inherit repos;
       artifactId = "commons-io";
       groupId = "commons-io";
-      sha512 = "6af22dffaaecd1553147e788b5cf50368582318f396e456fe9ff33f5175836713a5d700e51720465c932c2b1987daa83027358005812d6a95d5755432de3a79d";
-      version = "2.10.0";
+      sha512 = "fea08e150473673b0608eaee3ae1cb4e73834039db80d3b758710d6baf3a5840a0878a4eb64739ae9bb21ccc7148c8520fe873616a3f6d5cdb4305deabdd015c";
+      version = "2.20.0";
 
     };
     paths = [ src ];
@@ -307,21 +294,8 @@ let repos = [
       inherit repos;
       artifactId = "fipp";
       groupId = "fipp";
-      sha512 = "0c3bf011d9eec32993ccdf66910f818b4b0d80513c2cfb1cf6fc9714ec3d01ec4485397c90a6a0a4c0e30261323eabf0c090251c49c05061ab701292c5ad4306";
-      version = "0.6.26";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
-    name = "jboss-logging/org.jboss.logging";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "jboss-logging";
-      groupId = "org.jboss.logging";
-      sha512 = "c17b8882481c0cb8fbcdf7ea33d268e2173b1bfe04be71e61d5f07c3040b1c33b58781063f8ebf27325979d02255e62d1df16a633ac22f9d08adeb5c6b83a32a";
-      version = "3.4.1.Final";
+      sha512 = "d731e06ce832f7dc9f9788e73bf53f7c406ce6065fbac9f668b4cef38595b23810072fe2b39524dbc6a01ae91916214e1edd91619bf976006ddd18e88102617c";
+      version = "0.6.27";
 
     };
     paths = [ src ];
@@ -333,8 +307,21 @@ let repos = [
       inherit repos;
       artifactId = "jackson-core";
       groupId = "com.fasterxml.jackson.core";
-      sha512 = "a1bd6c264b9ab07aad3d0f26b65757e35ff47904ab895bb7f997e3e1fd063129c177ad6f69876907b04ff8a43c6b1770a26f53a811633a29e66a5dce57194f64";
-      version = "2.8.7";
+      sha512 = "208953cf72691b3bab1ca2f9a045cccd3d75c46c90099ba884fbf16bc3e45045e5cd014d2c68c96e8a8826f87a5f0e18cb34b35e7ef03348953869c21e197367";
+      version = "2.14.2";
+
+    };
+    paths = [ src ];
+  }
+
+  rec {
+    name = "commons-fileupload2-core/org.apache.commons";
+    src = fetchMavenArtifact {
+      inherit repos;
+      artifactId = "commons-fileupload2-core";
+      groupId = "org.apache.commons";
+      sha512 = "c2dcb708c0c9f70e53b1704088512a1cd566921734079e008f665fe9bfbdd06b05e24fed352a06a1e2f27e576a72ba81006cc0d85d684b1a08d3f6f54213a777";
+      version = "2.0.0-M4";
 
     };
     paths = [ src ];
@@ -380,26 +367,13 @@ let repos = [
   }
 
   rec {
-    name = "directory-watcher/io.methvin";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "directory-watcher";
-      groupId = "io.methvin";
-      sha512 = "bcd346c08d73980e05592690e3525889c241f878909c85d7e097c7f99f38c64693870b69a41bfc0b02a4749387cef45089554898cfec4df5fda43a48acb3a7d1";
-      version = "0.15.1";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
     name = "google-closure-library-third-party/org.clojure";
     src = fetchMavenArtifact {
       inherit repos;
       artifactId = "google-closure-library-third-party";
       groupId = "org.clojure";
-      sha512 = "2ceef3cbba119d66a38619dc4309ee9eb5e3cccacae0a50e7f099a8df160e345e1abeaa315285fe0328c6afc842a77f6fa9d3c710745b07ce8d484caca7f47bf";
-      version = "0.0-20211011-0726fdeb";
+      sha512 = "13d07c9f954764ebab18ea97fd7aac66ee08521d4db52bc986884b8cda942890012c2910ca438bde4070894eac79e1278f76d0479c46b32f0937e176501daec6";
+      version = "0.0-20250515-f04e4c0e";
 
     };
     paths = [ src ];
@@ -432,19 +406,6 @@ let repos = [
   }
 
   rec {
-    name = "xnio-nio/org.jboss.xnio";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "xnio-nio";
-      groupId = "org.jboss.xnio";
-      sha512 = "7f2c53222caf40793b1c956aa08ff3316a86577e6a79274050bcdf700b68546397b286e3d693c1b3036fe9175f54f76816cbf6a100ae67f9e6c20b4ca028e56d";
-      version = "3.8.0.Final";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
     name = "priority-queue/shams";
     src = fetchMavenArtifact {
       inherit repos;
@@ -452,19 +413,6 @@ let repos = [
       groupId = "shams";
       sha512 = "0fe37b55324e7c6bfcd338e7f72cdbaa5987c918877469685e3e23a34da0e8657c6453bf8af5378bb21ba2eff57c767857306ebcba4676525602e07c91194f8c";
       version = "0.1.2";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
-    name = "reagent/reagent";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "reagent";
-      groupId = "reagent";
-      sha512 = "c15ceec91a05ac90d69f9499a8f1088ea794fc017ffec7b9d941f4e46a5c731704893e301f1b4d887082dc807294547e5846784a5a21ee4d768508c47b493d3a";
-      version = "1.2.0";
 
     };
     paths = [ src ];
@@ -484,26 +432,13 @@ let repos = [
   }
 
   rec {
-    name = "jboss-threads/org.jboss.threads";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "jboss-threads";
-      groupId = "org.jboss.threads";
-      sha512 = "12d2b4c6c4f732a4b9437ae6e893087981aa2d829c9bad7089cd4cb10bccd7105e136f694e43a36e5bf234ca81294117fd9f6a07795f77c0f80d8f748c8fa529";
-      version = "3.1.0.Final";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
     name = "transit-clj/com.cognitect";
     src = fetchMavenArtifact {
       inherit repos;
       artifactId = "transit-clj";
       groupId = "com.cognitect";
-      sha512 = "f04e0e4f76bcc684559e479cdc1cc39822eab869cc07f972040fb9778b0bcffe73a9518e9b58134f0b9c0ba4e5a115c065756b4423b4816db36eb382a9972c48";
-      version = "1.0.329";
+      sha512 = "a0aa547ec2f11221d1156c4388dea27bfd48470cc0da6dd3702e98530a3cdda146defb5309b5aea60770fb2282e329816ea6b6fbb4349eaf89b310df8003d733";
+      version = "1.0.333";
 
     };
     paths = [ src ];
@@ -523,13 +458,26 @@ let repos = [
   }
 
   rec {
+    name = "closure-compiler/com.google.javascript";
+    src = fetchMavenArtifact {
+      inherit repos;
+      artifactId = "closure-compiler";
+      groupId = "com.google.javascript";
+      sha512 = "c2f8a1278e64fd9b0421ecfc763037ced5f2609c6561c4a1822f544f2ed9d98d7989a50a92f0d8e33a2c68a87609ec833f4fdef622cbcb094d349843250619ef";
+      version = "v20250820";
+
+    };
+    paths = [ src ];
+  }
+
+  rec {
     name = "ring-codec/ring";
     src = fetchMavenArtifact {
       inherit repos;
       artifactId = "ring-codec";
       groupId = "ring";
-      sha512 = "38b9775a794831b8afd8d66991a75aa5910cd50952c9035866bf9cc01353810aedafbc3f35d8f9e56981ebf9e5c37c00b968759ed087d2855348b3f46d8d0487";
-      version = "1.1.3";
+      sha512 = "65df7fe417fada187554a0a92d9f0b72972328e7943419066404dbf9443508b5ee156b844d15e3ebdca43de49d7c5fb853469bec44ca7b0dd0d693cf5b93de2a";
+      version = "1.3.0";
 
     };
     paths = [ src ];
@@ -541,8 +489,8 @@ let repos = [
       inherit repos;
       artifactId = "shadow-client";
       groupId = "thheller";
-      sha512 = "b1f2ac82b31841d265af0939ecc0824e6ba8cc28d15b44c77f3abb305b5e88465b839915a222016c2ac8c7e2049d1daa2a3eebb9a58cdc9cf653bc56712b4ca7";
-      version = "1.3.3";
+      sha512 = "e8019544a1cbbc9c3c9a931bd8dd9b7734260aca9d5e9a7a91089e898c65bee4ab535019c53b917f57c0aa49c1645296966226e4105b45463bbff2f30c7f427c";
+      version = "1.4.0";
 
     };
     paths = [ src ];
@@ -562,39 +510,26 @@ let repos = [
   }
 
   rec {
+    name = "ring-websocket-protocols/org.ring-clojure";
+    src = fetchMavenArtifact {
+      inherit repos;
+      artifactId = "ring-websocket-protocols";
+      groupId = "org.ring-clojure";
+      sha512 = "907fd4f6214131159eb24e998a7f76e05438e40756d65a8f961b49d86ff39cd40cfcf0daa065a1706a2324479c3ef9c3e44013d69aa85d4284ca8a334899c7a8";
+      version = "1.15.3";
+
+    };
+    paths = [ src ];
+  }
+
+  rec {
     name = "crypto-equality/crypto-equality";
     src = fetchMavenArtifact {
       inherit repos;
       artifactId = "crypto-equality";
       groupId = "crypto-equality";
-      sha512 = "54cf3bd28f633665962bf6b41f5ccbf2634d0db210a739e10a7b12f635e13c7ef532efe1d5d8c0120bb46478bbd08000b179f4c2dd52123242dab79fea97d6a6";
-      version = "1.0.0";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
-    name = "wildfly-client-config/org.wildfly.client";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "wildfly-client-config";
-      groupId = "org.wildfly.client";
-      sha512 = "3f442478c57f7dfac7039f6c7ae014bb2d45cdbd690ee631a3349edbca414adfe1984d065d1439f9b1546fa15fbd032c3a6bfe008f1ad50eef74201467b9f55f";
-      version = "1.0.1.Final";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
-    name = "jna/net.java.dev.jna";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "jna";
-      groupId = "net.java.dev.jna";
-      sha512 = "ee8d8aa63c67561880626a2f84412fb6996b411e065060cbe4669cc2b4e5537d09acd6d262e1924f0c066d76b18a2bd8a94e96f313b3ffd12f4735b8f6e06bb5";
-      version = "5.7.0";
+      sha512 = "4430da47874ce0cbeb22d46141d6c8c352efb7a5bd100aceba1279964d063cfe850998c79d0bfaaa674ca93a47bcdc2bc5dc8f62f7224d9fbf461e00fcba58fc";
+      version = "1.0.1";
 
     };
     paths = [ src ];
@@ -606,8 +541,34 @@ let repos = [
       inherit repos;
       artifactId = "tools.reader";
       groupId = "org.clojure";
-      sha512 = "3481259c7a1eac719db2921e60173686726a0c2b65879d51a64d516a37f6120db8ffbb74b8bd273404285d7b25143ab5c7ced37e7c0eaf4ab1e44586ccd3c651";
-      version = "1.3.6";
+      sha512 = "1216f54eb088bdcd72fe08ed62e78bb8f5bfd9fd46d99a935db3dba1e17bf6935fdcf379a49eb42d5da6af524c3f39be07415fd79121abec7f9d76425cfca032";
+      version = "1.6.0";
+
+    };
+    paths = [ src ];
+  }
+
+  rec {
+    name = "ring-core-protocols/org.ring-clojure";
+    src = fetchMavenArtifact {
+      inherit repos;
+      artifactId = "ring-core-protocols";
+      groupId = "org.ring-clojure";
+      sha512 = "f60e0e0ad86eafb7a936a803a5a45a0bfe83c246b8ca72110e1493eebb64ac086e0764919aa70f43db58f001c5aba23a676a1d0facbe7b70b9d295a8eb8ec0e2";
+      version = "1.15.3";
+
+    };
+    paths = [ src ];
+  }
+
+  rec {
+    name = "replicant/no.cjohansen";
+    src = fetchMavenArtifact {
+      inherit repos;
+      artifactId = "replicant";
+      groupId = "no.cjohansen";
+      sha512 = "f71df5042478f2b26c496110dc2082074401305f40ffc78d8225f724a8596242a252477ec4fe8384f2e6681dfbae60d6dd6301f0f71cd5f6ff4bebe498904742";
+      version = "2025.12.1";
 
     };
     paths = [ src ];
@@ -619,47 +580,8 @@ let repos = [
       inherit repos;
       artifactId = "nrepl";
       groupId = "nrepl";
-      sha512 = "62154bd5c58b3fd315431e269d8e30a1aded912b414dac57d0fcffba740daa451238311523f8307a3bed18afbf0d3e60cac64eb3d5f54bb04f7786e8d4fa8a93";
-      version = "0.9.0";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
-    name = "slf4j-api/org.slf4j";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "slf4j-api";
-      groupId = "org.slf4j";
-      sha512 = "e5435852569dda596ba46138af8ee9c4ecba8a7a43f4f1e7897aeb4430523a0f037088a7b63877df5734578f19d331f03d7b0f32d5ae6c425df211947b3e6173";
-      version = "1.7.30";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
-    name = "xnio-api/org.jboss.xnio";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "xnio-api";
-      groupId = "org.jboss.xnio";
-      sha512 = "eab8904c5e2f6071f076e5f68fc7520fb4e9f292df2cc03be4ac7834f52994e9f539b52be7509280f4fb49a4ded185732e8a50ffd3417e39b540d508db34ac5f";
-      version = "3.8.0.Final";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
-    name = "closure-compiler-unshaded/com.google.javascript";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "closure-compiler-unshaded";
-      groupId = "com.google.javascript";
-      sha512 = "120085b36288008055e5d84a2f4fdb8c6ae4850724fdf6ae874c165e24443a93ac9fefc17fe490f634b26d048f467c5945d4f835d9bd2db50dd25473701dab91";
-      version = "v20220502";
+      sha512 = "3471ec735fb294d9dbbf5806213cfb9359a76870d2a018645701490eda70c76342e7bf21190ac65702557fbea3af92270224549209cf4b03a8e12299d01d7f44";
+      version = "1.3.1";
 
     };
     paths = [ src ];
@@ -671,8 +593,8 @@ let repos = [
       inherit repos;
       artifactId = "core.memoize";
       groupId = "org.clojure";
-      sha512 = "67196537084b7cc34a01454d2a3b72de3fddce081b72d7a6dc1592d269a6c2728b79630bd2d52c1bf2d2f903c12add6f23df954c02ef8237f240d7394ccc3dde";
-      version = "1.0.253";
+      sha512 = "9441e7d0d61fb1665929a32464d8bacb5c4e9bbef062eb7fc72e39e7402e0bfd32fda4cf05df0c82c60f06936ba152cb73b42d79993ff146c1084640f4205124";
+      version = "1.1.266";
 
     };
     paths = [ src ];
@@ -684,8 +606,8 @@ let repos = [
       inherit repos;
       artifactId = "data.priority-map";
       groupId = "org.clojure";
-      sha512 = "bb8bc5dbfd3738c36b99a51880ac3f1381d6564e67601549ef5e7ae2b900e53cdcdfb8d0fa4bf32fb8ebc4de89d954bfa3ab7e8a1122bc34ee5073c7c707ac13";
-      version = "1.1.0";
+      sha512 = "b90a9a049c6dc0274286e44bcc52bd231065161612eaff920381f3d41bbb28ae22771831ddd03b32e52d089c83ca8a6df6d1d3044977c287f040aaa713b5dc6d";
+      version = "1.2.0";
 
     };
     paths = [ src ];
@@ -697,21 +619,8 @@ let repos = [
       inherit repos;
       artifactId = "piggieback";
       groupId = "cider";
-      sha512 = "8b7b62c6babe21764363e61259800fca25a3db175d3b7f9ff77deec457618a3303162a7645179f95e9d7c7f02c7ffcb58d1e0e237623a35b24e583fb75bb3081";
-      version = "0.5.3";
-
-    };
-    paths = [ src ];
-  }
-
-  rec {
-    name = "shadow-undertow/thheller";
-    src = fetchMavenArtifact {
-      inherit repos;
-      artifactId = "shadow-undertow";
-      groupId = "thheller";
-      sha512 = "dbf6e4e49f4fcbfc0b228ec9801cc62bbab6586fa082b10c7c8e16022a7cb93469c663ee98e4a61ce5a3369fda659e4a761442b380a9ecb00fb469b03cca16e4";
-      version = "0.2.1";
+      sha512 = "0f2e70002ef02568125c78c14266d23f43fb0ad477d05db697c0cc13b707bc1a0eacdce0f065f0eaaa68caffc3fb71384499ece45859f07fb1e6bc6d334bf86e";
+      version = "0.6.0";
 
     };
     paths = [ src ];
@@ -723,8 +632,8 @@ let repos = [
       inherit repos;
       artifactId = "ring-core";
       groupId = "ring";
-      sha512 = "d2b4794dc025dbf49f0ff30681b2931b313736cb19ca8716b1bb6dcc35fdce09eaded45dd938981a170816062b6a59f4d2eed1767db4447923954e7d9d06f1fb";
-      version = "1.9.5";
+      sha512 = "ef20a3654a3acb2b6e69255a984636299777d73f834662770a986456c7d381e4d9b8532a32804a8cc7fffeea9bcf5e139a0c0ba7c216555e428172494d8ad049";
+      version = "1.15.3";
 
     };
     paths = [ src ];
@@ -736,8 +645,8 @@ let repos = [
       inherit repos;
       artifactId = "core.cache";
       groupId = "org.clojure";
-      sha512 = "0a07ceffc2fa3a536b23773eefc7ef5e1108913b93c3a5416116a6566de76dd5c218f3fb0cc19415cbaa8843838de310b76282f20bf1fc3467006c9ec373667e";
-      version = "1.0.225";
+      sha512 = "db8044d17fe8f45ced70f38d1b91f95d2bddfaf3512fa53273c50576c6324cb2df72174fce3d9fce1d5b19da7bdd9e7a00f31359472515d554a6d5414016b5c8";
+      version = "1.1.234";
 
     };
     paths = [ src ];
@@ -749,8 +658,8 @@ let repos = [
       inherit repos;
       artifactId = "core.async";
       groupId = "org.clojure";
-      sha512 = "160a77da25382d7c257eee56cfe83538620576a331e025a2d672fc26d9f04e606666032395f3c2e26247c782544816a5862348f3a921b1ffffcd309c62ac64f5";
-      version = "1.5.648";
+      sha512 = "46f7c64d1076ef3b9c27e254ca2ddfa0a2ff84d6bfc994d14dbffaade3fce5319d054c61f9aa2bc3b0de7fcc61129e9cb26912b9711ac16bf6cc8b25eee9ea50";
+      version = "1.9.865";
 
     };
     paths = [ src ];
@@ -762,8 +671,8 @@ let repos = [
       inherit repos;
       artifactId = "jaxb-api";
       groupId = "javax.xml.bind";
-      sha512 = "0c5bfc2c9f655bf5e6d596e0c196dcb9344d6dc78bf774207c8f8b6be59f69addf2b3121e81491983eff648dfbd55002b9878132de190825dad3ef3a1265b367";
-      version = "2.3.0";
+      sha512 = "1d9e270e7ae1ab6bf3ad8c85b044096a58716180daeb9ffa181230b1d8862812954d4d2d3162b24cb2f1c947e998a186581259094e05ad875416488ca7dc3932";
+      version = "2.4.0-b180830.0359";
 
     };
     paths = [ src ];
