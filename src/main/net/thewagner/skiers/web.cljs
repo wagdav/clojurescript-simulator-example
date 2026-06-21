@@ -32,13 +32,12 @@
                  :running true}))
 
 (defn advance! []
-  (swap! store (fn [s]
-                 (->> (last (:results s))
-                      skiers/step
-                      (conj (:results s))
-                      (take-last 200)
-                      vec
-                      (assoc s :results)))))
+  (swap! store update :results
+    (fn [results]
+      (let [new-results (conj results (skiers/step (peek results)))]
+        (if (> (count new-results) 200)
+          (subvec new-results 1)
+          new-results)))))
 
 (defn start! []
   (swap! store assoc :running true))
